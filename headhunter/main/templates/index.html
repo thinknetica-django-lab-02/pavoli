@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-</head>
+{% block content %}
 
-<body>
-    <h1>1.2 Add standart Apps</h1>
+<h1>HH.ru COPY</h1>
 
-    <ul>
-        <li><a href="{% url 'index' %}">Home</a></li>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a href="{% url 'contact' %}">Contact</a></li>
-    </ul>
-</body>
+<p>Welcome to <em>HeadHunter</em>, a Django website developed with help from ThinkNetica.</p>
+
+{% endblock %}
