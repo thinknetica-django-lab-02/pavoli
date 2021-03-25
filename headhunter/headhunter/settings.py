@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     # add my app
     'main.apps.MainConfig',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
