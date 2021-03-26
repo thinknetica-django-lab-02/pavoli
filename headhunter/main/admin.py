@@ -3,7 +3,7 @@ from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.utils.translation import gettext_lazy as _
 
-from .models import Applicant, SummaryMain, SummaryDetail
+from .models import Applicant, SummaryMain, SummaryDetail, Vacancy, Employer, Technology
 
 # Register your models here.
 
@@ -28,3 +28,6 @@ admin.site.register(FlatPage, FlatPageAdmin)
 admin.site.register(Applicant)
 admin.site.register(SummaryMain)
 admin.site.register(SummaryDetail)
+admin.site.register(Vacancy)
+admin.site.register(Employer)
+admin.site.register(Technology)
