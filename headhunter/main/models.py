@@ -29,6 +29,7 @@ class Applicant(models.Model):
 
 class SummaryMain(models.Model):
 
+    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     salary = models.IntegerField()
 
@@ -50,7 +51,6 @@ class SummaryMain(models.Model):
         max_length=1, choices=VISIBILITY_CHOICE, default='v')
 
     refresh_date = models.DateTimeField(auto_now_add=True)
-    # detail_info = models.ManyToOneRel
 
     def get_absolute_url(self):
         return reverse('cv_head', args=[str(self.id)])
@@ -77,6 +77,7 @@ class SummaryDetail(models.Model):
         ('12', 'December'),
     )
 
+    summary = models.ForeignKey(SummaryMain, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=50)
     job_title = models.CharField(max_length=20)
     year_begin = models.CharField(max_length=4)
