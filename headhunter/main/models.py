@@ -6,19 +6,17 @@ from django.urls import reverse
 
 class Applicant(models.Model):
 
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    birth_date = models.DateField(null=True, blank=True)
-    email = models.EmailField(max_length=50)
-    phone = models.CharField(max_length=20)
-
     GENDER_CHOICE = (
         ('m', 'male'),
         ('f', 'female'),
     )
 
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    birth_date = models.DateField(null=True, blank=True)
+    email = models.EmailField(max_length=50)
+    phone = models.CharField(max_length=20)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
-    # cv = models.ManyToManyField('SummaryMain')
 
     def get_absolute_url(self):
         return reverse('person', args=[str(self.id)])
@@ -29,31 +27,28 @@ class Applicant(models.Model):
 
 class SummaryMain(models.Model):
 
-    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    salary = models.IntegerField()
-
     CURRENCY_CHOICE = (
         ('r', 'RUB'),
         ('e', 'EUR'),
         ('u', 'USD'),
     )
 
-    currency = models.CharField(
-        max_length=1, choices=CURRENCY_CHOICE, default='r')
-
     VISIBILITY_CHOICE = (
         ('v', 'Visible to anyone'),
         ('n', 'Not visible to anyone'),
     )
 
+    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    salary = models.IntegerField()
+    currency = models.CharField(
+        max_length=1, choices=CURRENCY_CHOICE, default='r')
     visibility_status = models.CharField(
         max_length=1, choices=VISIBILITY_CHOICE, default='v')
-
     refresh_date = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
-        return reverse('cv_head', args=[str(self.id)])
+        return reverse('summary_main', args=[str(self.id)])
 
     def __str__(self):
         return self.title
