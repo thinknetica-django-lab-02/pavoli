@@ -80,10 +80,10 @@ def get_skills_all():
 if __name__ == '__main__':
     from main.models import *
 
-    # create_applicant()
+    create_applicant()
     # get_applicant_all()
-    # create_summary_main()
+    create_summary_main()
     # get_summary_main_all()
-    # create_skills()
+    create_skills()
     # get_skill_fliter()
-    get_skills_all()
+    # get_skills_all()
