@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
+
 {% include 'navbar.html' with username="Pavel Olifer" %}
 
-<h1>HH.ru COPY</h1>
+<h1>Find IT specialists</h1>
 
-<p>Welcome to <em>HeadHunter</em>, a Django website developed with help from ThinkNetica.</p>
+<p>
+  Welcome to <em>Headhunting site</em>, a Django website developed with help
+  from ThinkNetica.
+</p>
 
 {% if turn_on_block %}
-    <p>The turn_on_block value is {{ turn_on_block }}</p>
-{% endif %}
-
-{% endblock %}
+<p>The turn_on_block value is {{ turn_on_block }}</p>
+{% endif %} {% endblock %}
