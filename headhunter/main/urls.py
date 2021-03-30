@@ -11,6 +11,8 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('applicant', views.ApplicantListView.as_view(), name='applicant'),
+    path('applicant/', views.ApplicantListView.as_view(), name='applicant'),
     path('applicant/<int:pk>', views.ApplicantDetailView, name='applicant-detail'),
+    path('vacancy/', views.VacancyListView.as_view(), name='vacancy'),
+    path('technology/', views.TechnologyListView.as_view(), name='technology'),
 ]
