@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Technology:</h1>
+{% if technology_list %}
+<ul>
+    {% for technology in technology_list %}
+    <li> {{ technology }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are no technology in the DB.</p>
+{% endif %}
+{% endblock %}

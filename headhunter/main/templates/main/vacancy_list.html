@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Vacancy List:</h1>
+{% if vacancy_list %}
+<ul>
+    {% for vacancy in vacancy_list %}
+    <li> {{ vacancy }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are no vacancy in the DB.</p>
+{% endif %}
+{% endblock %}

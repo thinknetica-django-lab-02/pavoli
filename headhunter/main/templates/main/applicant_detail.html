@@ -6,11 +6,11 @@
 <p>{{ applicant.birth_date }}</p>
 
 <div style="margin-left: 20px; margin-top: 20px">
-  <h4>Detail information</h4>
+  <h4>Detail information:</h4>
 
   {% for copy in applicant.summarymain_set.all %}
   <hr />
-  <p><a href="{{ copy.get_absolute_url }}">{{ copy.title }}</a></p>
+  <p><a href="{% url 'applicant-detail' % }}">{{ copy.title }}</a></p>
   <p>{{ copy.salary }} ({{ copy.currency }})</p>
   {% endfor %}
 </div>

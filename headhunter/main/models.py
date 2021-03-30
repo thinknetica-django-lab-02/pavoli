@@ -24,7 +24,7 @@ class Applicant(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
 
     def get_absolute_url(self):
-        return reverse('applicant', args=[str(self.id)])
+        return reverse('applicant-detail', args=[str(self.id)])
 
     def __str__(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
@@ -93,9 +93,6 @@ class Technology(models.Model):
 
     name = models.CharField(
         max_length=100, help_text='Enter a technology name')
-
-    def get_absolute_url(self):
-        return reverse('texhnology', args=[str(self.id)])
 
     def __str__(self):
         return self.name
