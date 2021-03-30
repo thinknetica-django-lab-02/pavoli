@@ -107,6 +107,7 @@ class Employer(models.Model):
     description = models.TextField(max_length=500)
     site = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    update_date = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('employer', args=[str(self.id)])
