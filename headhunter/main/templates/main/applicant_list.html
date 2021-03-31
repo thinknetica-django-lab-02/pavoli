@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Candidates:</h1>
+{% if applicant_list %}
+<ul>
+  {% for applicant in applicant_list %}
+  <li>
+    <a href="{{ applicant.get_absolute_url }}">{{ applicant.last_name }} , {{ applicant.first_name }}
+      ({{ applicant.birth_date }})
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>There are no applicant in the DB.</p>
+{% endif %}
+{% endblock %}

@@ -24,7 +24,7 @@ class Applicant(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
 
     def get_absolute_url(self):
-        return reverse('person', args=[str(self.id)])
+        return reverse('applicant-detail', args=[str(self.id)])
 
     def __str__(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
@@ -82,6 +82,9 @@ class SummaryDetail(models.Model):
         max_length=2, choices=MONTH_CHOICE, default='00')
     job_duty = models.TextField(max_length=500)
 
+    def get_absolute_url(self):
+        return reverse('summary_detail', args=[str(self.id)])
+
     def __str__(self):
         return '{0}, {1} ({2}.{3})'.format(self.company_name, self.job_title, self.year_begin, self.month_begin)
 
@@ -101,6 +104,10 @@ class Employer(models.Model):
     description = models.TextField(max_length=500)
     site = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    update_date = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('employer', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.company_name} ({self.site})'
@@ -119,6 +126,9 @@ class Vacancy(models.Model):
         max_length=1, choices=CURRENCY_CHOICE, default='r')
     publish_date = models.DateField(auto_now=True)
     is_active = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+        return reverse('vacancy', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.vacancy_name} ({self.company_name})'
