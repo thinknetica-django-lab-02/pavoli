@@ -9,6 +9,15 @@ CURRENCY_CHOICE = (
 )
 
 
+class Technology(models.Model):
+
+    name = models.CharField(
+        max_length=100, help_text='Enter a technology name')
+
+    def __str__(self):
+        return '{0}(id={1})'.format(self.name, self.id)
+
+
 class Applicant(models.Model):
 
     GENDER_CHOICE = (
@@ -22,12 +31,21 @@ class Applicant(models.Model):
     email = models.EmailField(max_length=50)
     phone = models.CharField(max_length=20)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
+    skill = models.ManyToManyField(
+        Technology, help_text="Select a skill for Candidate")
 
     def get_absolute_url(self):
         return reverse('applicant-detail', args=[str(self.id)])
 
     def __str__(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
+
+    def display_skill(self):
+        """
+        Creates a string for the Skill. This is required to display genre in Admin.
+        """
+        return ', '.join([skill.name for skill in self.skill.all()])
+    display_skill.short_description = 'Skill'
 
 
 class SummaryMain(models.Model):
@@ -89,15 +107,6 @@ class SummaryDetail(models.Model):
         return '{0}, {1} ({2}.{3})'.format(self.company_name, self.job_title, self.year_begin, self.month_begin)
 
 
-class Technology(models.Model):
-
-    name = models.CharField(
-        max_length=100, help_text='Enter a technology name')
-
-    def __str__(self):
-        return self.name
-
-
 class Employer(models.Model):
 
     company_name = models.CharField(max_length=50)
@@ -132,3 +141,10 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return f'{self.vacancy_name} ({self.company_name})'
+
+    def display_key_skill(self):
+        """
+        Creates a string for the Skill. This is required to display genre in Admin.
+        """
+        return ', '.join([skill.name for skill in self.key_skill.all()])
+    display_key_skill.short_description = 'Skill'

@@ -2,22 +2,38 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    {% block title %}
+    <title>Site for Hunting IT specialists</title>
+    {% endblock title %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<head>
-  {% block title %}
-  <title>Site for Hunting IT specialists</title>
-  {% endblock %}
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}" />
+  </head>
 
-  <link rel="stylesheet" href="{% static '/css/styles.css' %}" />
-</head>
-
-<body>
-  {% block content %} {% endblock %}
-</body>
-
+  <body>
+    {% block content %} {% endblock content %}
+    {% block pagination %}
+      {% if is_paginated %}
+        <div class="pagination pagination-centered">
+          <span class="page-links">
+              {% for num in page_obj.paginator.page_range %}
+                  {% if num == page_obj.number %}
+                      <span class="current"><b>{{ num }}</b></span>
+                  {% else %}
+                      <a href="?page={{ num }}&{{ tag_url }}"> {{ num }}</a>
+                  {% endif %} 
+              {% endfor %}
+          </span>
+        </div>
+      {% endif %}
+    {% endblock pagination %}
+  </body>
 </html>
