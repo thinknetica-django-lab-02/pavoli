@@ -21,6 +21,24 @@ class ApplicantListView(generic.ListView):
     context_object_name = 'applicant_list'
     queryset = Applicant.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = self.request.GET.get('tag')
+        context['tag'] = tag
+        if tag is not None:
+            context['tag_url'] = f'&tag={tag}'
+        else:
+            context['tag_url'] = ''
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag = self.request.GET.get('tag')
+
+        if tag:
+            return queryset.filter(skill=tag)
+        return queryset
+
 
 class ApplicantDetailView(generic.DetailView):
     model = Applicant

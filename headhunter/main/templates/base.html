@@ -28,7 +28,7 @@
                   {% if num == page_obj.number %}
                       <span class="current"><b>{{ num }}</b></span>
                   {% else %}
-                      <a href="?tag{{ search }}&page={{ num }}"> {{ num }}</a>
+                      <a href="?page={{ num }}&{{ tag_url }}"> {{ num }}</a>
                   {% endif %} 
               {% endfor %}
           </span>
