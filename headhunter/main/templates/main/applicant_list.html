@@ -3,15 +3,32 @@
 {% block content %}
   <h1>Candidates:</h1>
   {% if applicant_list %}
-    <ul>
+    <table class="candidate_list">
+      <tr class="first-table-row">
+        <th>Name</th>
+        <th>Skills</th>
+      </tr>
+      
       {% for applicant in applicant_list %}
-      <li>
-        <a href="{{ applicant.get_absolute_url }}">{{ applicant.last_name }} , {{ applicant.first_name }}
-          ({{ applicant.birth_date }})
-        </a>
-      </li>
+      
+      <tr>
+        <td>
+          <a href="{{ applicant.get_absolute_url }}">{{ applicant.last_name }} , {{ applicant.first_name }}
+            ({{ applicant.birth_date }})
+          </a>
+        </td>
+        <td>
+          {% for skill in applicant.skill.all %}
+          <a href="{% url 'applicant' skill.id %}">
+            {{ skill.name }}
+          </a>
+          {% endfor %}
+        </td>
+      </tr>
+      
       {% endfor %}
-    </ul>
+      
+      </table>
   {% else %}
     <p>There are no applicant in the DB.</p>
   {% endif %}
