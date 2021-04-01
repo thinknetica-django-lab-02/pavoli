@@ -12,7 +12,7 @@
     {% for copy in applicant.summarymain_set.all %}
     <hr />
     <p><a href="{% url 'applicant-detail' % }}">{{ copy.title }}</a></p>
-    <p>{{ copy.salary }} ({{ copy.currency }})</p>
+    <p>{{ copy.salary }} ({{ copy.get_currency_display }})</p>
     {% endfor %}
   </div>
 {% endblock content %}
