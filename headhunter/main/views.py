@@ -26,7 +26,7 @@ class ApplicantListView(generic.ListView):
         tag = self.request.GET.get('tag')
         context['tag'] = tag
         if tag is not None:
-            context['tag_url'] = f'&tag={tag}'
+            context['tag_url'] = f'tag={tag}'
         else:
             context['tag_url'] = ''
         return context
