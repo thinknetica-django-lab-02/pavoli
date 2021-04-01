@@ -94,4 +94,5 @@ if __name__ == '__main__':
     # create_skills()
     # get_skill_fliter()
     # get_skills_all()
-    get_applicant_by_filter(filter_name=7)
+    # get_applicant_by_filter(filter_name=7)
+    pass
