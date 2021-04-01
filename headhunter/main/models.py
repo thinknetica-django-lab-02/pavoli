@@ -15,7 +15,7 @@ class Technology(models.Model):
         max_length=100, help_text='Enter a technology name')
 
     def __str__(self):
-        return self.name
+        return '{0}(id={1})'.format(self.name, self.id)
 
 
 class Applicant(models.Model):
