@@ -16,6 +16,7 @@ def index(request):
 
 class ApplicantListView(generic.ListView):
     model = Applicant
+    paginate_by = 10
 
     context_object_name = 'applicant_list'
     queryset = Applicant.objects.all()
@@ -23,6 +24,7 @@ class ApplicantListView(generic.ListView):
 
 class ApplicantDetailView(generic.DetailView):
     model = Applicant
+    paginate_by = 10
 
     def applicant_detail_view(request, primary_key):
         applicant = get_object_or_404(Applicant, pk=primary_key)
@@ -32,13 +34,15 @@ class ApplicantDetailView(generic.DetailView):
 
 class TechnologyListView(generic.ListView):
     model = Technology
+    paginate_by = 10
 
     context_object_name = 'technology_list'
-    queryset = Technology.objects.all()
+    queryset = Technology.objects.all().order_by('name')
 
 
 class VacancyListView(generic.ListView):
     model = Vacancy
+    paginate_by = 10
 
     context_object_name = 'vacancy_list'
     queryset = Vacancy.objects.all()
