@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-<h1>Candidate: {{ applicant.last_name }}, {{ applicant.first_name }}</h1>
+  <h1>Candidate: {{ applicant.last_name }}, {{ applicant.first_name }}</h1>
 
-<p>{{ applicant.birth_date }}</p>
+  <p>{{ applicant.birth_date }}</p>
 
-<div style="margin-left: 20px; margin-top: 20px">
-  <h4>Detail information:</h4>
+  <div style="margin-left: 20px; margin-top: 20px">
+    <h4>Detail information:</h4>
 
-  {% for copy in applicant.summarymain_set.all %}
-  <hr />
-  <p><a href="{% url 'applicant-detail' % }}">{{ copy.title }}</a></p>
-  <p>{{ copy.salary }} ({{ copy.currency }})</p>
-  {% endfor %}
-</div>
-{% endblock %}
+    {% for copy in applicant.summarymain_set.all %}
+    <hr />
+    <p><a href="{% url 'applicant-detail' % }}">{{ copy.title }}</a></p>
+    <p>{{ copy.salary }} ({{ copy.currency }})</p>
+    {% endfor %}
+  </div>
+{% endblock content %}
