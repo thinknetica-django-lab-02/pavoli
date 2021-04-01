@@ -30,6 +30,13 @@ def get_applicant(id):
     return a
 
 
+def get_applicant_by_filter(filter_name):
+    a = Applicant.objects.filter(skill=filter_name)
+    print(a)
+
+    return a
+
+
 def create_summary_main():
     a = get_applicant(1)
 
@@ -80,10 +87,11 @@ def get_skills_all():
 if __name__ == '__main__':
     from main.models import *
 
-    create_applicant()
+    # create_applicant()
     # get_applicant_all()
-    create_summary_main()
+    # create_summary_main()
     # get_summary_main_all()
-    create_skills()
+    # create_skills()
     # get_skill_fliter()
     # get_skills_all()
+    get_applicant_by_filter(filter_name=7)
