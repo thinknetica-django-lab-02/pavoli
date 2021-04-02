@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.views.generic.edit import UpdateView
 
 
-from .models import Applicant, Employer, Technology, Vacancy
+from .models import Applicant, Employer, Technology, Vacancy, Profile
 
 # Create your views here.
 
@@ -64,3 +65,8 @@ class VacancyListView(generic.ListView):
 
     context_object_name = 'vacancy_list'
     queryset = Vacancy.objects.all()
+
+
+class ProfileForm(UpdateView):
+    model = Profile
+    template_name_suffix = '_update_form'
