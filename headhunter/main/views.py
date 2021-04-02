@@ -69,4 +69,6 @@ class VacancyListView(generic.ListView):
 
 class ProfileForm(UpdateView):
     model = Profile
-    template_name_suffix = '_update_form'
+    fields = ['first_name', 'last_name', 'email']
+    template_name = 'accounts/profile/profile_update_form.html'
+    # template_name_suffix = '_update_form'
