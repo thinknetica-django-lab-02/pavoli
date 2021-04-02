@@ -17,3 +17,7 @@ urlpatterns += [
     path('vacancy/', views.VacancyListView.as_view(), name='vacancy'),
     path('technology/', views.TechnologyListView.as_view(), name='technology'),
 ]
+
+urlpatterns += [
+    path('profile/<int:pk>', views.ProfileForm.as_view(), name='profile'),
+]
