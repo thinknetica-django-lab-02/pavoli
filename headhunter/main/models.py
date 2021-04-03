@@ -148,3 +148,15 @@ class Vacancy(models.Model):
         """
         return ', '.join([skill.name for skill in self.key_skill.all()])
     display_key_skill.short_description = 'Skill'
+
+
+class Profile(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+
+    def __str__(self):
+        return f'{self.first_name}, {self.last_name}'
+
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'pk': self.pk})

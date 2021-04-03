@@ -19,7 +19,7 @@
         </td>
         <td>
           {% for skill in applicant.skill.all %}
-          <a href="{{ request.path }}?tag={{ skill.id }}">
+          <a href="{% url 'applicant' %}?tag={{ skill.id }}">
             {{ skill.name }}
           </a>
           {% endfor %}
