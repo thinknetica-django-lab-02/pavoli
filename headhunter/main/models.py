@@ -152,9 +152,11 @@ class Vacancy(models.Model):
 
 
 class Profile(models.Model):
+
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        default=1
     )
 
     def get_absolute_url(self):

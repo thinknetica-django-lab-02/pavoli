@@ -84,6 +84,10 @@ def get_skills_all():
         print(i, end=', ')
 
 
+def get_model_fields_name(model_name):
+    print([f.name for f in model_name._meta.get_fields()])
+
+
 if __name__ == '__main__':
     from main.models import *
 
@@ -95,4 +99,4 @@ if __name__ == '__main__':
     # get_skill_fliter()
     # get_skills_all()
     # get_applicant_by_filter(filter_name=7)
-    pass
+    get_model_fields_name(model_name=User)
