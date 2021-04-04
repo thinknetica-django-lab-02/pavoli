@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from django.views.generic.edit import UpdateView
 from django.forms import inlineformset_factory
 from django.urls import reverse
 
 
-from .models import Applicant, Employer, Technology, Vacancy, Profile, User
+from .models import Applicant, Employer, Technology, Vacancy, Profile, User, ProfileFormset
 
 # Create your views here.
 
@@ -69,10 +68,13 @@ class VacancyListView(generic.ListView):
     queryset = Vacancy.objects.all()
 
 
-class ProfileForm(UpdateView):
-    model = User
+class ProfileForm(generic.UpdateView):
+    formset_class = ProfileFormset
     template_name = 'accounts/profile/profile_update_form.html'
     fields = ['first_name', 'last_name', 'email']
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.kwargs['pk'])
 
     def get_success_url(self):
         if 'pk' in self.kwargs:

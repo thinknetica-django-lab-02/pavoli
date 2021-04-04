@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.forms.models import inlineformset_factory
 
 # Create your models here.
 CURRENCY_CHOICE = (
@@ -161,3 +162,6 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'pk': self.pk})
+
+
+ProfileFormset = inlineformset_factory(User, Profile, fields=())
