@@ -4,7 +4,7 @@ from django.forms import inlineformset_factory
 from django.urls import reverse
 
 
-from .models import Applicant, Employer, Technology, Vacancy, Profile, User, ProfileFormset
+from .models import Applicant, Employer, Technology, Vacancy, Profile, User
 
 # Create your views here.
 
@@ -69,7 +69,7 @@ class VacancyListView(generic.ListView):
 
 
 class ProfileForm(generic.UpdateView):
-    formset_class = ProfileFormset
+    formset_class = inlineformset_factory(User, Profile, fields=())
     template_name = 'accounts/profile/profile_update_form.html'
     fields = ['first_name', 'last_name', 'email']
 
