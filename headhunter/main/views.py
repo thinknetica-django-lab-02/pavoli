@@ -4,7 +4,7 @@ from django.urls import reverse
 
 
 from .models import Applicant, Employer, Technology, Vacancy, User
-from .forms import ProfileFormset
+from .forms import *
 
 # Create your views here.
 
@@ -69,9 +69,9 @@ class VacancyListView(generic.ListView):
 
 
 class ProfileUpdate(generic.UpdateView):
-    formset_class = ProfileFormset
+    model = User
+    form_class = UserForm
     template_name = 'accounts/profile/profile_update_form.html'
-    fields = ['first_name', 'last_name', 'email']
 
     def get_queryset(self):
         return User.objects.filter(id=self.kwargs['pk'])
