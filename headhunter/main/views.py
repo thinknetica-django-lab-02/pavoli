@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.views import generic
-from django.forms import inlineformset_factory
+from django.views.generic import (ListView, DetailView, UpdateView, FormView)
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 
 from .models import Applicant, Employer, Technology, Vacancy, Profile, User
+from .forms import (UserForm, ProfileUserFormset)
 
 # Create your views here.
 
@@ -16,7 +17,7 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-class ApplicantListView(generic.ListView):
+class ApplicantListView(ListView):
     model = Applicant
     paginate_by = 10
 
@@ -42,7 +43,7 @@ class ApplicantListView(generic.ListView):
         return queryset
 
 
-class ApplicantDetailView(generic.DetailView):
+class ApplicantDetailView(DetailView):
     model = Applicant
     paginate_by = 10
 
@@ -52,7 +53,7 @@ class ApplicantDetailView(generic.DetailView):
         return render(request, 'main/applicant_detail.html', context={'applicant': applicant})
 
 
-class TechnologyListView(generic.ListView):
+class TechnologyListView(ListView):
     model = Technology
     paginate_by = 10
 
@@ -60,7 +61,7 @@ class TechnologyListView(generic.ListView):
     queryset = Technology.objects.all().order_by('name')
 
 
-class VacancyListView(generic.ListView):
+class VacancyListView(ListView):
     model = Vacancy
     paginate_by = 10
 
@@ -68,17 +69,39 @@ class VacancyListView(generic.ListView):
     queryset = Vacancy.objects.all()
 
 
-class ProfileForm(generic.UpdateView):
-    formset_class = inlineformset_factory(User, Profile, fields=())
+class ProfileUpdate(UpdateView):
+    model = User
+    form_class = UserForm
     template_name = 'accounts/profile/profile_update_form.html'
-    fields = ['first_name', 'last_name', 'email']
 
-    def get_queryset(self):
-        return User.objects.filter(id=self.kwargs['pk'])
+    def get_object(self, request):
+        return request.user
 
-    def get_success_url(self):
-        if 'pk' in self.kwargs:
-            pk = self.kwargs['pk']
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_form'] = ProfileUserFormset(
+            instance=self.get_object(kwargs['request']))
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        return self.render_to_response(self.get_context_data(request=request))
+
+    def form_valid_formset(self, form, formset):
+        if formset.is_valid():
+            formset.save(commit=False)
+            formset.save()
         else:
-            pk = 'demo'
-        return reverse('profile', kwargs={'pk': pk})
+            return HttpResponseRedirect(self.get_success_url())
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        form = self.get_form()
+        profile_form = ProfileFormSet(
+            self.request.POST, self.request.FILES, instance=self.object)
+        if form.is_valid():
+            return self.form_valid_formset(form, profile_form)
+        else:
+            return self.form_invalid(form)

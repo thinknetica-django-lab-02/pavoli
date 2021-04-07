@@ -1,5 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Update">
+    {{ profile_form.management_form }}
+    {% for inline_form in profile_form %}
+        {{ inline_form.as_p }}
+    {% endfor %}
+    <input type="submit" class="btn btn-primary" value="Update">
 </form>
+{% endblock content %}

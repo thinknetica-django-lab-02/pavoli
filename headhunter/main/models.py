@@ -1,7 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.forms.models import inlineformset_factory
+
+from .validators import validate_age
 
 # Create your models here.
 CURRENCY_CHOICE = (
@@ -159,6 +160,11 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         default=1
     )
+    birthday = models.DateField(
+        null=True, blank=True, validators=[validate_age])
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'pk': self.pk})
+
+    def __str__(self):
+        return self.user.username
