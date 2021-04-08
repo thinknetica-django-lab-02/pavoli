@@ -11,5 +11,5 @@ class UserForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email']
 
 
-ProfileUserFormset = forms.inlineformset_factory(
+ProfileFormset = forms.inlineformset_factory(
     User, Profile, fields=('birthday',), can_delete=False, extra=1)

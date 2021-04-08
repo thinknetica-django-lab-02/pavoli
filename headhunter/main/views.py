@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import (ListView, DetailView, UpdateView, FormView)
 from django.shortcuts import render, get_object_or_404
-from .forms import (UserForm, ProfileUserFormset)
+from .forms import (UserForm, ProfileFormset)
 from .models import Applicant, Employer, Technology, Vacancy, Profile, User
 
 # Create your views here.
@@ -84,12 +84,18 @@ class ProfileUpdate(UpdateView):
 
 
 '''
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_form'] = ProfileFormset(
+            instance=self.get_object(kwargs['request']))
+        return context
+
     def get_object(self, request):
         return request.user
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile_form'] = ProfileUserFormset(
+        context['profile_form'] = ProfileFormset(
             instance=self.get_object(kwargs['request']))
         return context
 
@@ -109,7 +115,7 @@ class ProfileUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object(request)
         form = self.get_form()
-        profile_form = ProfileUserFormset(
+        profile_form = ProfileFormset(
             self.request.POST, self.request.FILES, instance=self.object)
         if form.is_valid():
             return self.form_valid_formset(form, profile_form)
