@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='profile',
             name='birthday',
-            field=models.DateField(null=True, validators=[main.validators.validator_age]),
+            field=models.DateField(null=True, validators=[
+                                   main.validators.validate_age]),
         ),
     ]

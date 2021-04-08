@@ -1,13 +1,10 @@
-from datetime import date, datetime
 from django.forms import ValidationError
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 
-def validator_age(value):
-    today = date.today()
-    date_check = datetime.strptime(
-        f"{today.year - 18}{today.month}{today.day}", '%Y%m%d').date()
+def validate_age(value):
+    age = relativedelta(timezone.now().date(), value).years
 
-    if date_check < value:
+    if age < 18:
         raise ValidationError('Возраст меньше 18 лет!')
-
-    return value
