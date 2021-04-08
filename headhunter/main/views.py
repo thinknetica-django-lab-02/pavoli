@@ -1,9 +1,11 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views.generic import (ListView, DetailView, UpdateView, FormView)
 from django.shortcuts import render, get_object_or_404
-from .forms import (UserForm, ProfileFormset)
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+
 from .models import Applicant, Employer, Technology, Vacancy, Profile, User
+from .forms import (UserForm, ProfileFormset)
 
 # Create your views here.
 
@@ -67,58 +69,22 @@ class VacancyListView(ListView):
     queryset = Vacancy.objects.all()
 
 
-class ProfileUpdate(UpdateView):
-    model = User
-    form_class = UserForm
-    template_name = 'accounts/profile/profile_update_form.html'
-
-    def get_success_url(self):
-        if 'pk' in self.kwargs:
-            pk = self.kwargs['pk']
+def update_profile(request, pk):
+    user = User.objects.get(id=pk)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        formset = ProfileFormset(
+            request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and formset.is_valid():
+            u = user_form.save()
+            for form in formset.forms:
+                up = form.save(commit=False)
+                up.user = u
+                up.save()
+            messages.success(request, 'Profile successfully updated!')
         else:
-            pk = 'demo'
-        return reverse('profile', kwargs={'pk': pk})
-
-    def get_queryset(self):
-        return User.objects.filter(id=self.kwargs['pk'])
-
-
-'''
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['profile_form'] = ProfileFormset(
-            instance=self.get_object(kwargs['request']))
-        return context
-
-    def get_object(self, request):
-        return request.user
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['profile_form'] = ProfileFormset(
-            instance=self.get_object(kwargs['request']))
-        return context
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object(request)
-        return self.render_to_response(self.get_context_data(request=request))
-
-    def form_valid_formset(self, form, formset):
-        if formset.is_valid():
-            formset.save(commit=False)
-            formset.save()
-        else:
-            return HttpResponseRedirect(self.get_success_url())
-        form.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object(request)
-        form = self.get_form()
-        profile_form = ProfileFormset(
-            self.request.POST, self.request.FILES, instance=self.object)
-        if form.is_valid():
-            return self.form_valid_formset(form, profile_form)
-        else:
-            return self.form_invalid(form)
-'''
+            messages.error(request, 'Please, fix errors...')
+    else:
+        user_form = UserForm(instance=request.user)
+        formset = ProfileFormset(instance=request.user.profile)
+    return render(request, 'accounts/profile/profile_update_form.html', locals())

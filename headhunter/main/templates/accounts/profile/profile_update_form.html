@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Profile Editing
+{% endblock %}
+
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    {{ profile_form.management_form }}
-    {% for inline_form in profile_form %}
-        {{ inline_form.as_p }}
+    {{formset.management_form}}
+    {{ user_form.as_p }}
+    {% for ft in formset%}
+        {{ ft }}
     {% endfor %}
     <input type="submit" class="btn btn-primary" value="Update">
 </form>

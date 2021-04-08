@@ -19,5 +19,5 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('profile/<int:pk>', views.ProfileUpdate.as_view(), name='profile'),
+    path('profile/<int:pk>', views.update_profile, name='profile'),
 ]
