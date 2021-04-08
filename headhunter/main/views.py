@@ -1,11 +1,9 @@
-from .forms import (UserForm, ProfileUserFormset)
-from .models import Applicant, Employer, Technology, Vacancy, Profile, User
-from .forms import *
-from .models import Applicant, Employer, Technology, Vacancy, User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import (ListView, DetailView, UpdateView, FormView)
 from django.shortcuts import render, get_object_or_404
+from .forms import (UserForm, ProfileUserFormset)
+from .models import Applicant, Employer, Technology, Vacancy, Profile, User
 
 # Create your views here.
 
@@ -74,6 +72,18 @@ class ProfileUpdate(UpdateView):
     form_class = UserForm
     template_name = 'accounts/profile/profile_update_form.html'
 
+    def get_success_url(self):
+        if 'pk' in self.kwargs:
+            pk = self.kwargs['pk']
+        else:
+            pk = 'demo'
+        return reverse('profile', kwargs={'pk': pk})
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.kwargs['pk'])
+
+
+'''
     def get_object(self, request):
         return request.user
 
@@ -99,9 +109,10 @@ class ProfileUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object(request)
         form = self.get_form()
-        profile_form = ProfileFormSet(
+        profile_form = ProfileUserFormset(
             self.request.POST, self.request.FILES, instance=self.object)
         if form.is_valid():
             return self.form_valid_formset(form, profile_form)
         else:
             return self.form_invalid(form)
+'''
