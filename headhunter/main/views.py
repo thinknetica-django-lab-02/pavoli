@@ -105,7 +105,7 @@ class UserProfileUpdate(UpdateView):
 
     def get_object(self, request):
         """Получение пользователя из request."""
-        return self.kwargs['pk']
+        return request.user
 
     def get_context_data(self, **kwargs):
         """Добавление в контекст дополнительной формы"""
