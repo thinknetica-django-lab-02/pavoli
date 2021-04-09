@@ -1,11 +1,19 @@
-from django.views.generic import (ListView, DetailView, UpdateView, FormView)
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http.response import (
+    HttpResponseRedirect,
+)
+from django.shortcuts import redirect, render, reverse
+from django.views.generic import (
+    ListView, DetailView, UpdateView, CreateView,
+)
+from .forms import (
+    UserForm, ProfileForm, ProfileFormSet,
+)
+from .models import (
+    Applicant, Employer, Technology, Vacancy, Profile,
+)
 
-
-from .models import Applicant, Employer, Technology, Vacancy, Profile, User
-from .forms import (UserForm, ProfileFormset)
 
 # Create your views here.
 
@@ -69,22 +77,69 @@ class VacancyListView(ListView):
     queryset = Vacancy.objects.all()
 
 
-def update_profile(request, pk):
-    user = User.objects.get(id=pk)
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        formset = ProfileFormset(
-            request.POST, request.FILES, instance=request.user.profile)
-        if user_form.is_valid() and formset.is_valid():
-            u = user_form.save()
-            for form in formset.forms:
-                up = form.save(commit=False)
-                up.user = u
-                up.save()
-            messages.success(request, 'Profile successfully updated!')
+class ProfileCreate(CreateView):
+    """Создание профиля пользователя"""
+    model = Profile
+    form_class = ProfileForm
+    # success_url = 'accounts/profile/'
+
+    def get_initial(self):
+        # этод метод я оставил только при создании так как связку User-Profile надо устанавливать
+        # только при создании профиля, при редактировании профиля она уже будет и заново устанавливать не надо
+        initial = super(ProfileCreate, self).get_initial()
+        initial['user'] = self.request.user.id
+        return initial
+
+
+class UserProfileUpdate(UpdateView):
+    """Редактирование данных пользователя и профиля."""
+
+    model = User
+    form_class = UserForm
+    template_name = 'accounts/profile/profile_form.html'
+    # success_url = 'accounts/profile/'
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse('profile', kwargs={'pk': pk})
+
+    def get_object(self, request):
+        """Получение пользователя из request."""
+        return self.kwargs['pk']
+
+    def get_context_data(self, **kwargs):
+        """Добавление в контекст дополнительной формы"""
+        context = super().get_context_data(**kwargs)
+        context['profile_form'] = ProfileFormSet(
+            instance=self.get_object(kwargs['request']))
+        return context
+
+    def get(self, request, *args, **kwargs):
+        """Метод обрабатывающий GET запрос.
+        Переопределяется только из-за self.get_object(request)
+        """
+        self.object = self.get_object(request)
+        return self.render_to_response(self.get_context_data(request=request))
+
+    def form_valid_formset(self, form, formset):
+        """Валидация вложенной формы и сохранение обеих форм."""
+        if formset.is_valid():
+            formset.save(commit=False)
+            formset.save()
         else:
-            messages.error(request, 'Please, fix errors...')
-    else:
-        user_form = UserForm(instance=request.user)
-        formset = ProfileFormset(instance=request.user.profile)
-    return render(request, 'accounts/profile/profile_update_form.html', locals())
+            return HttpResponseRedirect(self.get_success_url())
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        """Метод обрабатывающий POST запрос.
+        Здесь происходит валидация основной формы и создание инстанса формы данным POST запроса
+        """
+        self.object = self.get_object(request)
+        form = self.get_form()
+        profile_form = ProfileFormSet(
+            self.request.POST, self.request.FILES, instance=self.object)
+        if form.is_valid():
+            return self.form_valid_formset(form, profile_form)
+        else:
+            return self.form_invalid(form)

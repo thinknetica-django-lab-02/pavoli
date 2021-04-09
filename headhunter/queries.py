@@ -88,6 +88,12 @@ def get_model_fields_name(model_name):
     print([f.name for f in model_name._meta.get_fields()])
 
 
+def get_profile_table():
+    profile = Profile.objects.all()
+    for p in profile:
+        print(f'profile={p}')
+
+
 if __name__ == '__main__':
     from main.models import *
 
@@ -99,4 +105,5 @@ if __name__ == '__main__':
     # get_skill_fliter()
     # get_skills_all()
     # get_applicant_by_filter(filter_name=7)
-    get_model_fields_name(model_name=User)
+    # get_model_fields_name(model_name=User)
+    get_profile_table()
