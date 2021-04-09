@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.forms.models import inlineformset_factory
+from django.dispatch import receiver
+
 
 # Create your models here.
 CURRENCY_CHOICE = (
@@ -154,11 +156,8 @@ class Vacancy(models.Model):
 
 class Profile(models.Model):
 
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        default=1
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    date_of_birth = models.DateField(null=True, blank=True)
 
-    def get_absolute_url(self):
-        return reverse('profile', kwargs={'pk': self.pk})
+    def __str__(self):
+        return self.user.username
