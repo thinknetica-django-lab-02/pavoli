@@ -7,12 +7,8 @@ from django.shortcuts import redirect, render, reverse
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
-from .forms import (
-    UserForm, ProfileForm, ProfileFormSet,
-)
-from .models import (
-    Applicant, Employer, Technology, Vacancy, Profile,
-)
+from .forms import *
+from .models import *
 
 
 # Create your views here.
@@ -143,3 +139,35 @@ class UserProfileUpdate(UpdateView):
             return self.form_valid_formset(form, profile_form)
         else:
             return self.form_invalid(form)
+
+
+def create_vacancy(request, employer_id):
+    employer = Employer.objects.get(id=employer_id)
+    formset = vacancy_formset(
+        queryset=Vacancy.objects.none(), instance=employer)
+
+    if request.method == 'POST':
+        formset = vacancy_formset(request.POST, instance=employer)
+
+        if formset.is_valid():
+            formset.save()
+
+            return redirect('/')
+
+    context = {'formset': formset, }
+    return render(request, 'accounts/vacancy_form.html', context)
+
+
+def update_vacancy(request, id):
+    vacancy = Vacancy.objects.get(id=id)
+    form = VacancyForm(instance=vacancy)
+
+    if request.method == 'POST':
+        form = VacancyForm(request.POST, instance=vacancy)
+
+        if form.is_valid():
+            form.save()
+            return redirect('.')
+
+    context = {'formset': form}
+    return render(request, 'accounts/vacancy_form.html', context)

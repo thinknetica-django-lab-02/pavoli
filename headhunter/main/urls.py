@@ -14,7 +14,13 @@ urlpatterns += [
     path('applicant/', views.ApplicantListView.as_view(), name='applicant'),
     path('applicant/<int:pk>', views.ApplicantDetailView.as_view(),
          name='applicant-detail'),
+
     path('vacancy/', views.VacancyListView.as_view(), name='vacancy'),
+    path('vacancy/add/<str:employer_id>/',
+         views.create_vacancy, name='create_vacancy'),
+    path('vacancy/edit/<str:id>/',
+         views.update_vacancy, name='update_vacancy'),
+
     path('technology/', views.TechnologyListView.as_view(), name='technology'),
 ]
 

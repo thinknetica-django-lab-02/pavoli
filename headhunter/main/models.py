@@ -144,7 +144,7 @@ class Vacancy(models.Model):
         return reverse('vacancy', args=[str(self.id)])
 
     def __str__(self):
-        return f'{self.vacancy_name} ({self.company_name})'
+        return f'{self.vacancy_name} ({self.salary_min} - {self.salary_max})'
 
     def display_key_skill(self):
         """
