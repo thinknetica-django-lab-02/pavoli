@@ -17,6 +17,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email',)
@@ -26,11 +27,17 @@ ProfileFormSet = inlineformset_factory(User, Profile, fields=(
     'date_of_birth',), extra=0, min_num=1, can_delete=False)
 
 
-class VacancyForm(forms.ModelForm):
+class VacancyAddForm(forms.ModelForm):
+
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        fields = ['vacancy_name', 'vacancy_description',
+                  'key_skill', 'salary_min', 'salary_max', 'currency']
 
 
-vacancy_formset = inlineformset_factory(
-    Employer, Vacancy, fields=('vacancy_name', 'vacancy_description', 'key_skill', 'salary_min', 'salary_max', 'currency'), extra=1)
+class VacancyUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Vacancy
+        fields = ['vacancy_name', 'vacancy_description',
+                  'key_skill', 'salary_min', 'salary_max', 'currency']

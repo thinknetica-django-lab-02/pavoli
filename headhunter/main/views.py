@@ -4,6 +4,7 @@ from django.http.response import (
     HttpResponseRedirect,
 )
 from django.shortcuts import redirect, render, reverse
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
@@ -141,33 +142,16 @@ class UserProfileUpdate(UpdateView):
             return self.form_invalid(form)
 
 
-def create_vacancy(request, employer_id):
-    employer = Employer.objects.get(id=employer_id)
-    formset = vacancy_formset(
-        queryset=Vacancy.objects.none(), instance=employer)
+class VacancyAddView(CreateView):
 
-    if request.method == 'POST':
-        formset = vacancy_formset(request.POST, instance=employer)
-
-        if formset.is_valid():
-            formset.save()
-
-            return redirect('/')
-
-    context = {'formset': formset, }
-    return render(request, 'accounts/vacancy_form.html', context)
+    model = Vacancy
+    form_class = VacancyAddForm
+    success_url = reverse_lazy('vacancy')
 
 
-def update_vacancy(request, id):
-    vacancy = Vacancy.objects.get(id=id)
-    form = VacancyForm(instance=vacancy)
+class VacancyUpdateView(UpdateView):
 
-    if request.method == 'POST':
-        form = VacancyForm(request.POST, instance=vacancy)
-
-        if form.is_valid():
-            form.save()
-            return redirect('.')
-
-    context = {'formset': form}
-    return render(request, 'accounts/vacancy_form.html', context)
+    model = Vacancy
+    form_class = VacancyUpdateForm
+    template_name_suffix = '_form_update'
+    success_url = reverse_lazy('vacancy')

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # add my app
     'main.apps.MainConfig',
     'ckeditor',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [

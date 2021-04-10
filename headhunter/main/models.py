@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 
+from sorl.thumbnail import ImageField
+
 
 # Create your models here.
 CURRENCY_CHOICE = (
@@ -37,6 +39,7 @@ class Applicant(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
     skill = models.ManyToManyField(
         Technology, help_text="Select a skill for Candidate")
+    image = ImageField(upload_to='images', blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('applicant-detail', args=[str(self.id)])
