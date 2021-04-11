@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 
 {% block content %}
   <h1>Candidate: {{ applicant.last_name }}, {{ applicant.first_name }}</h1>
+  {% thumbnail applicant.image "100x100" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+  {% endthumbnail %}  
 
   <p>{{ applicant.birth_date }}</p>
 

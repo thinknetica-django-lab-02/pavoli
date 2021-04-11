@@ -4,15 +4,12 @@ from django.http.response import (
     HttpResponseRedirect,
 )
 from django.shortcuts import redirect, render, reverse
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
-from .forms import (
-    UserForm, ProfileForm, ProfileFormSet,
-)
-from .models import (
-    Applicant, Employer, Technology, Vacancy, Profile,
-)
+from .forms import *
+from .models import *
 
 
 # Create your views here.
@@ -143,3 +140,18 @@ class UserProfileUpdate(UpdateView):
             return self.form_valid_formset(form, profile_form)
         else:
             return self.form_invalid(form)
+
+
+class VacancyAddView(CreateView):
+
+    model = Vacancy
+    form_class = VacancyAddForm
+    success_url = reverse_lazy('vacancy')
+
+
+class VacancyUpdateView(UpdateView):
+
+    model = Vacancy
+    form_class = VacancyUpdateForm
+    template_name_suffix = '_form_update'
+    success_url = reverse_lazy('vacancy')
