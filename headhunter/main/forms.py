@@ -31,7 +31,7 @@ class VacancyAddForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = ['vacancy_name', 'vacancy_description',
+        fields = ['company_name', 'vacancy_name', 'vacancy_description',
                   'key_skill', 'salary_min', 'salary_max', 'currency']
 
 
@@ -39,5 +39,5 @@ class VacancyUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = ['vacancy_name', 'vacancy_description',
+        fields = ['company_name', 'vacancy_name', 'vacancy_description',
                   'key_skill', 'salary_min', 'salary_max', 'currency']
