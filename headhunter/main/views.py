@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
@@ -147,14 +147,20 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
 
-class VacancyAddView(CreateView):
+class VacancyAddView(PermissionRequiredMixin, CreateView):
+
+    def has_permission(self):
+        return self.request.user.groups.filter(name='sellers').exists()
 
     model = Vacancy
     form_class = VacancyAddForm
     success_url = reverse_lazy('vacancy')
 
 
-class VacancyUpdateView(UpdateView):
+class VacancyUpdateView(PermissionRequiredMixin, UpdateView):
+
+    def has_permission(self):
+        return self.request.user.groups.filter(name='sellers').exists()
 
     model = Vacancy
     form_class = VacancyUpdateForm
