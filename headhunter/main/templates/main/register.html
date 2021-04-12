@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% block content %}
+<h1>New User registration form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <input class="btn btn-primary" type="submit" value="Create User">
+      <button class="btn btn-outline-danger" ><a href="{% provider_login_url 'google' %}">Use Google</a></button>
+    </div>
+</form>
+{% endblock %}
