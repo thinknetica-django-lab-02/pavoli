@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import *
 from .models import *
 
@@ -74,7 +76,7 @@ class VacancyListView(ListView):
     queryset = Vacancy.objects.all()
 
 
-class ProfileCreate(CreateView):
+class ProfileCreate(LoginRequiredMixin, CreateView):
     """Создание профиля пользователя"""
     model = Profile
     form_class = ProfileForm
@@ -88,13 +90,13 @@ class ProfileCreate(CreateView):
         return initial
 
 
-class UserProfileUpdate(UpdateView):
+class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     """Редактирование данных пользователя и профиля."""
 
     model = User
     form_class = UserForm
     template_name = 'accounts/profile/profile_form.html'
-    # success_url = 'accounts/profile/'
+    login_url = reverse_lazy('index')
 
     def get_success_url(self):
         pk = self.kwargs['pk']
