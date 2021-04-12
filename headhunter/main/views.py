@@ -9,6 +9,9 @@ from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import login, logout
 
 from .forms import *
 from .models import *
@@ -157,3 +160,18 @@ class VacancyUpdateView(UpdateView):
     form_class = VacancyUpdateForm
     template_name_suffix = '_form_update'
     success_url = reverse_lazy('vacancy')
+
+
+class RegisterUser(CreateView):
+    form_class = UserCreationForm
+    template_name = 'main/register.html'
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('index')
+
+
+class LoginUser(LoginView):
+    form_class = AuthenticationForm
+    template_name = 'main/login.html'

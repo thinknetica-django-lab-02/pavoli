@@ -44,6 +44,15 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'ckeditor',
     'sorl.thumbnail',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.instagram',
+    'allauth.socialaccount.providers.telegram',
+    'allauth.socialaccount.providers.vk',
+    'allauth.socialaccount.providers.yandex',
 ]
 
 MIDDLEWARE = [
@@ -131,4 +140,32 @@ STATIC_URL = '/static/'
 SITE_ID = 1
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
+
+LOGIN_URL = '/'
+
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+'''
+ACCOUNT_FORMS = {
+    'login': 'main.forms.CustomLoginForm',
+}
+'''
