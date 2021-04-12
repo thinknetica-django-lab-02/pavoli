@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
+from django.core.mail import EmailMessage
 
 from .forms import *
 from .models import *
