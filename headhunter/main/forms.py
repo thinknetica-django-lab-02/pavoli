@@ -50,8 +50,8 @@ class CreateNewUser(UserCreationForm):
     username = forms.CharField(
         label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password1 = forms.CharField(
-        label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Password confirm', widget=forms.PasswordInput(
+        label='Password1', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Password2', widget=forms.PasswordInput(
         attrs={'class': 'form-input'}))
     email = forms.EmailField(
         label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))

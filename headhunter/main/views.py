@@ -84,7 +84,7 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     """Создание профиля пользователя"""
     model = Profile
     form_class = ProfileForm
-    # success_url = 'accounts/profile/'
+    # success_url = 'account/profile/'
 
     def get_initial(self):
         # этод метод я оставил только при создании так как связку User-Profile надо устанавливать
@@ -99,7 +99,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
 
     model = User
     form_class = UserForm
-    template_name = 'accounts/profile/profile_form.html'
+    template_name = 'account/profile/profile_form.html'
     login_url = reverse_lazy('index')
 
     def get_success_url(self):
@@ -175,9 +175,6 @@ class RegisterUser(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        email = EmailMessage('Thank you for registration!',
-                             'You are registered on our site.', to=[user.email])
-        email.send()
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('index')
 

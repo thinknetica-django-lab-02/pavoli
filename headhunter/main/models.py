@@ -3,6 +3,8 @@ from django.db.models.signals import post_save
 from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives
+from allauth.account.signals import user_signed_up
 
 from sorl.thumbnail import ImageField
 
@@ -171,3 +173,14 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         group = Group.objects.get_or_create(name='common_users')
         instance.groups.add(group[0])
+
+
+@receiver(user_signed_up)
+def user_signed_up_(sender, request, user, **kwargs):
+
+    subject, from_email, to = 'Welcome', 'admin@mysite', user.email
+    text_content = "some custom text or html"
+    msg = EmailMultiAlternatives(
+        subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
