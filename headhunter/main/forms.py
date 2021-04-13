@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
 from allauth.account.forms import LoginForm
+from django.contrib.auth.forms import UserCreationForm
 
 from main.models import (
     Profile,
@@ -42,3 +43,19 @@ class VacancyUpdateForm(forms.ModelForm):
         model = Vacancy
         fields = ['company_name', 'vacancy_name', 'vacancy_description',
                   'key_skill', 'salary_min', 'salary_max', 'currency']
+
+
+class CreateNewUser(UserCreationForm):
+
+    username = forms.CharField(
+        label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(
+        label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Password confirm', widget=forms.PasswordInput(
+        attrs={'class': 'form-input'}))
+    email = forms.EmailField(
+        label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2', 'email')

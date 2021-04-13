@@ -9,7 +9,7 @@ from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.core.mail import EmailMessage
@@ -170,11 +170,14 @@ class VacancyUpdateView(PermissionRequiredMixin, UpdateView):
 
 
 class RegisterUser(CreateView):
-    form_class = UserCreationForm
+    form_class = CreateNewUser
     template_name = 'main/register.html'
 
     def form_valid(self, form):
         user = form.save()
+        email = EmailMessage('Thank you for registration!',
+                             'You are registered on our site.', to=[user.email])
+        email.send()
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('index')
 
