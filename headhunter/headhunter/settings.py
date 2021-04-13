@@ -164,8 +164,5 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-'''
-ACCOUNT_FORMS = {
-    'login': 'main.forms.CustomLoginForm',
-}
-'''
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_FILE_PATH = 'media/app-messages'
