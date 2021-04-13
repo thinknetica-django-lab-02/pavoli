@@ -80,6 +80,16 @@ class VacancyListView(ListView):
     queryset = Vacancy.objects.all()
 
 
+class VacancyDetailView(DetailView):
+    model = Vacancy
+    paginate_by = 10
+
+    def vacancy_detail_view(request, primary_key):
+        vacancy = get_object_or_404(Vacancy, pk=primary_key)
+
+        return render(request, 'main/vacancy_detail.html', context={'vacancy': vacancy})
+
+
 class ProfileCreate(LoginRequiredMixin, CreateView):
     """Создание профиля пользователя"""
     model = Profile
