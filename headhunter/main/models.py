@@ -146,7 +146,7 @@ class Vacancy(models.Model):
     is_active = models.BooleanField(default=True)
 
     def get_absolute_url(self):
-        return reverse('vacancy', args=[str(self.id)])
+        return reverse('vacancy-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.vacancy_name} ({self.salary_min} - {self.salary_max})'
@@ -168,6 +168,14 @@ class Profile(models.Model):
         return self.user.username
 
 
+class Subscriber(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username}({self.user.email})'
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -184,3 +192,17 @@ def user_signed_up_(sender, request, user, **kwargs):
         subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
+@receiver(post_save, sender=Vacancy)
+def send_mail(sender, instance, created, **kwargs):
+    if created:
+        email_list = [s.user.email for s in Subscriber.objects.all()]
+        subject = f'new vacancy created {instance.vacancy_name}'
+        from_email = 'admin@mysite'
+        text_content = f'Vacancy {instance.vacancy_name}, from company {instance.company_name}'
+        html_content = f'For more details go to <a href="{instance.get_absolute_url()}">link</a>.'
+        msg = EmailMultiAlternatives(
+            subject, text_content, from_email, email_list)
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()

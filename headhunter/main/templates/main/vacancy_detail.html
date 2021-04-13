@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <h1>Vacancy: {{ vacancy.vacancy_name }} ({{ vacancy.company_name }})</h1>
+
+  <p>{{ applicant.birth_date }}</p>
+
+  <div style="margin-left: 20px; margin-top: 20px">
+    <h4>Detail information:</h4>
+
+    {{ vacancy.vacancy_description }}
+
+    {% for skill in vacancy.technology_set.all %}
+    <hr />
+    <p>{{ skill.name }}</p>
+    {% endfor %}
+  </div>
+{% endblock content %}

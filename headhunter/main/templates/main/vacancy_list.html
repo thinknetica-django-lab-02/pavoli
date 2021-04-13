@@ -5,7 +5,8 @@
 {% if vacancy_list %}
 <ul>
     {% for vacancy in vacancy_list %}
-    <li> {{ vacancy }}
+    <li>
+        <a href="{{ vacancy.get_absolute_url }}">{{ vacancy }}</a>
     </li>
     {% endfor %}
 </ul>

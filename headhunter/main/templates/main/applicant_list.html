@@ -1,35 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Candidates:</h1>
-  {% if applicant_list %}
-    <table class="candidate_list">
-      <tr class="first-table-row">
-        <th>Name</th>
-        <th>Skills</th>
-      </tr>
-      
-      {% for applicant in applicant_list %}
-      
-      <tr>
-        <td>
-          <a href="{{ applicant.get_absolute_url }}">{{ applicant.last_name }} , {{ applicant.first_name }}
-            ({{ applicant.birth_date }})
-          </a>
-        </td>
-        <td>
-          {% for skill in applicant.skill.all %}
-          <a href="{% url 'applicant' %}?tag={{ skill.id }}">
-            {{ skill.name }}
-          </a>
-          {% endfor %}
-        </td>
-      </tr>
-      
+<h1>Candidates:</h1>
+{% if applicant_list %}
+<table class="candidate_list">
+  <tr class="first-table-row">
+    <th>Name</th>
+    <th>Skills</th>
+  </tr>
+
+  {% for applicant in applicant_list %}
+
+  <tr>
+    <td>
+      <a href="{{ applicant.get_absolute_url }}">{{ applicant.last_name }} , {{ applicant.first_name }}
+        ({{ applicant.birth_date }})
+      </a>
+    </td>
+    <td>
+      {% for skill in applicant.skill.all %}
+      <a href="{% url 'applicant' %}?tag={{ skill.id }}">
+        {{ skill.name }}
+      </a>
       {% endfor %}
-      
-      </table>
-  {% else %}
-    <p>There are no applicant in the DB.</p>
-  {% endif %}
+    </td>
+  </tr>
+
+  {% endfor %}
+
+</table>
+{% else %}
+<p>There are no applicant in the DB.</p>
+{% endif %}
 {% endblock %}

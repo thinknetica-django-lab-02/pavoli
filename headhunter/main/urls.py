@@ -14,6 +14,8 @@ urlpatterns = [
          name='applicant-detail'),
 
     path('vacancy/', views.VacancyListView.as_view(), name='vacancy'),
+    path('vacancy/<int:pk>', views.VacancyDetailView.as_view(),
+         name='vacancy-detail'),
     path('vacancy/add', views.VacancyAddView.as_view(), name='create_vacancy'),
     path('vacancy/<int:pk>/edit',
          views.VacancyUpdateView.as_view(), name='update_vacancy'),
