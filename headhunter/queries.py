@@ -1,5 +1,7 @@
-import django
 import os
+from datetime import datetime, timedelta
+
+import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'headhunter.settings')
 django.setup()
@@ -94,6 +96,11 @@ def get_profile_table():
         print(f'profile={p}')
 
 
+def fresh_vacancy():
+    d = datetime.now()
+    return [v.vacancy_name for v in Vacancy.objects.filter(publish_date__gte=d.date() - timedelta(days=7))]
+
+
 if __name__ == '__main__':
     from main.models import *
 
@@ -106,4 +113,6 @@ if __name__ == '__main__':
     # get_skills_all()
     # get_applicant_by_filter(filter_name=7)
     # get_model_fields_name(model_name=User)
-    get_profile_table()
+    # get_profile_table()
+    # print(fresh_vacancy())
+    pass
