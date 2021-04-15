@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     # add my app
+    'headhunter.main',
     'main.apps.MainConfig',
     'ckeditor',
     'sorl.thumbnail',
@@ -185,3 +186,12 @@ CACHES = {
     }
 }
 CACHE_TTL = 60 * 15
+
+# celery setting.
+CELERY_CACHE_BACKEND = 'default'
+CELERY_BROKER_URL = 'redis://127.0.0.1'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1'
+CELERY_RESULT_PERSISTENT = True
+CELERY_TASK_RESULT_EXPIRES = None
+CELERY_SEND_EVENTS = True
+CELERY_IMPORTS = ('headhunter.tasks')
