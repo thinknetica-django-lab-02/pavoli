@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     # add my app
-    'headhunter.main',
     'main.apps.MainConfig',
     'ckeditor',
     'sorl.thumbnail',
