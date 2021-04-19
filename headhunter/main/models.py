@@ -206,3 +206,10 @@ def send_mail(sender, instance, created, **kwargs):
             subject, text_content, from_email, email_list)
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+
+
+class SMSLog(models.Model):
+
+    phone_number = models.CharField(max_length=15)
+    code = models.CharField(max_length=4, null=True, blank=True)
+    server_response = models.TextField(max_length=200)
