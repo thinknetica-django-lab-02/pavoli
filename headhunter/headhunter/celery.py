@@ -12,6 +12,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "send_new_vacancy": {
         "task": "main.tasks.get_new_vacancy_task",
-        "schedule": crontab(hour=09, minute=0, day_of_week="sunday"),
+        "schedule": crontab(hour=9, minute=0, day_of_week="sunday"),
     },
 }
