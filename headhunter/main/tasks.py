@@ -1,10 +1,15 @@
 from datetime import datetime, timedelta
 import logging
 
-from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import EmailMultiAlternatives
+from celery.utils.log import get_task_logger
+from celery import shared_task
 
 from .models import Vacancy, Subscriber
+from headhunter.celery import app
+
+
+logger = get_task_logger(__name__)
 
 
 def get_new_vacancy():
@@ -34,10 +39,7 @@ def get_new_vacancy():
     msg.send()
 
 
-def start():
-    scheduler = BackgroundScheduler()
-    logging.basicConfig()
-    logging.getLogger('apscheduler').setLevel(logging.DEBUG)
-    scheduler.add_job(get_new_vacancy, 'cron', day_of_week='mon',
-                      hour=5, minute=30, end_date='2021-05-30')
-    scheduler.start()
+@shared_task
+def get_new_vacancy_task():
+    logger.info('Sent new vacancy lists.')
+    return get_new_vacancy
