@@ -1,5 +1,7 @@
 from django.urls import path
 from django.contrib.flatpages import views as flat_views
+from django.views.decorators.cache import cache_page
+
 from . import views
 
 
@@ -13,7 +15,8 @@ urlpatterns = [
     path('applicant/<int:pk>', views.ApplicantDetailView.as_view(),
          name='applicant-detail'),
 
-    path('vacancy/', views.VacancyListView.as_view(), name='vacancy'),
+    path('vacancy/', cache_page(60 * 15)
+         (views.VacancyListView.as_view()), name='vacancy'),
     path('vacancy/<int:pk>', views.VacancyDetailView.as_view(),
          name='vacancy-detail'),
     path('vacancy/add', views.VacancyAddView.as_view(), name='create_vacancy'),
