@@ -13,7 +13,9 @@ from headhunter.celery import app
 logger = get_task_logger(__name__)
 
 
+@shared_task
 def get_new_vacancy():
+    logger.info('Sent new vacancy lists.')
     d = datetime.now()
 
     email_list = [s.user.email for s in Subscriber.objects.all()]
@@ -38,12 +40,6 @@ def get_new_vacancy():
         subject, text_content, from_email, email_list)
     msg.attach_alternative(html_content, "text/html")
     msg.send()
-
-
-@shared_task
-def get_new_vacancy_task():
-    logger.info('Sent new vacancy lists.')
-    return get_new_vacancy
 
 
 @shared_task
