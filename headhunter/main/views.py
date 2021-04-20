@@ -13,6 +13,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.core.mail import EmailMessage
+from django.core.cache import cache
 
 from .forms import *
 from .models import *
@@ -88,6 +89,18 @@ class VacancyDetailView(DetailView):
         vacancy = get_object_or_404(Vacancy, pk=primary_key)
 
         return render(request, 'main/vacancy_detail.html', context={'vacancy': vacancy})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        pk = context['vacancy']
+        num_visits = cache.get(pk, 0)
+        num_visits += 1
+        cache.set(pk, num_visits)
+
+        context['num_visits'] = num_visits
+
+        return context
 
 
 class ProfileCreate(LoginRequiredMixin, CreateView):
