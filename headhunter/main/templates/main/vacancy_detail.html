@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
-
+{% load cache %}
 
 {% block content %}
-  <h1>Vacancy: {{ vacancy.vacancy_name }} ({{ vacancy.company_name }})</h1>
+<h1>Vacancy: {{ vacancy.vacancy_name }} ({{ vacancy.company_name }})</h1>
 
-  <p>{{ applicant.birth_date }}</p>
+<p>{{ applicant.birth_date }}</p>
 
-  <div style="margin-left: 20px; margin-top: 20px">
-    <h4>Detail information:</h4>
+<div style="margin-left: 20px; margin-top: 20px">
+  <h4>Detail information:</h4>
 
-    {{ vacancy.vacancy_description }}
+  {{ vacancy.vacancy_description }}
 
-    {% for skill in vacancy.technology_set.all %}
-    <hr />
-    <p>{{ skill.name }}</p>
-    {% endfor %}
-  </div>
+  {% for skill in vacancy.technology_set.all %}
+  <hr />
+  <p>{{ skill.name }}</p>
+  {% endfor %}
+  {% cache 60 viewed %}
+    <p>viewed {{ num_visits }} time{% if num_visits > 1 %}s{% endif %}.</p>
+  {% endcache %}
+</div>
 {% endblock content %}
