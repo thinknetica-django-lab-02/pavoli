@@ -15,6 +15,7 @@
   <hr />
   <p>{{ skill.name }}</p>
   {% endfor %}
+  
   {% cache 60 viewed %}
     <p>viewed {{ num_visits }} time{% if num_visits > 1 %}s{% endif %}.</p>
   {% endcache %}
