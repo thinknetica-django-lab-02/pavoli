@@ -5,10 +5,13 @@ from django.contrib.auth.models import AnonymousUser
 from main.views import *
 
 
-client = Client()
+# client = Client()
 
 
 class ApplicantListViewTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
 
     def test_applicant(self):
         response = self.client.get(reverse('applicant'))
@@ -16,6 +19,9 @@ class ApplicantListViewTests(TestCase):
 
 
 class ApplicantDetailViewTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
 
     def test_candidate_detail(self):
         url = reverse('applicant-detail', args=[1, ])
@@ -25,6 +31,9 @@ class ApplicantDetailViewTests(TestCase):
 
 class TechnologyListViewTests(TestCase):
 
+    def setUp(self):
+        self.client = Client()
+
     def test_skills(self):
         response = self.client.get(reverse('technology'))
         self.assertEqual(response.status_code, 200)
@@ -32,12 +41,18 @@ class TechnologyListViewTests(TestCase):
 
 class VacancyListViewTests(TestCase):
 
+    def setUp(self):
+        self.client = Client()
+
     def test_vacancy(self):
         response = self.client.get(reverse('vacancy'))
         self.assertEqual(response.status_code, 200)
 
 
 class VacancyDetailViewTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
 
     def test_vacancy_detail(self):
         url = reverse('vacancy-detail', kwargs={'pk': 1})
