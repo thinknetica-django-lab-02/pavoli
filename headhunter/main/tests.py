@@ -1,10 +1,45 @@
-from django.test import TestCase
+from django.test import TestCase, Client, RequestFactory
+from django.urls import reverse
+from django.contrib.auth.models import AnonymousUser
 
-from django_redis import get_redis_connection
+from main.views import *
 
 
-# Use the name you have defined for Redis in settings.CACHES
-r = get_redis_connection("default")
-connection_pool = r.connection_pool
+client = Client()
 
-print("Created connections so far: %d" % connection_pool._created_connections)
+
+class ApplicantListViewTests(TestCase):
+
+    def test_applicant(self):
+        response = self.client.get(reverse('applicant'))
+        self.assertEqual(response.status_code, 200)
+
+
+class ApplicantDetailViewTests(TestCase):
+
+    def test_candidate_detail(self):
+        url = reverse('applicant-detail', args=[1, ])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TechnologyListViewTests(TestCase):
+
+    def test_skills(self):
+        response = self.client.get(reverse('technology'))
+        self.assertEqual(response.status_code, 200)
+
+
+class VacancyListViewTests(TestCase):
+
+    def test_vacancy(self):
+        response = self.client.get(reverse('vacancy'))
+        self.assertEqual(response.status_code, 200)
+
+
+class VacancyDetailViewTests(TestCase):
+
+    def test_vacancy_detail(self):
+        url = reverse('vacancy-detail', kwargs={'pk': 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
