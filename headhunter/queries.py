@@ -162,7 +162,7 @@ if __name__ == '__main__':
     # get_model_fields_name(model_name=User)
     # get_profile_table()
     # print(fresh_vacancy())
-    get_smslog()
+    # get_smslog()
     # create_smscode()
     # create_sms_task()
     pass
