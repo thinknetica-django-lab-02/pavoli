@@ -1,22 +1,19 @@
+from .models import Applicant, Technology, Vacancy, Profile
+from .forms import (VacancyUpdateForm, ProfileForm,
+                    ProfileFormSet, UserForm, VacancyAddForm, CreateNewUser,)
+from django.core.cache import cache
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib import messages
-from django.http.response import (
-    HttpResponseRedirect,
-)
-from django.shortcuts import redirect, render, reverse
+from django.contrib.auth import login
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import redirect, render, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView, DetailView, UpdateView, CreateView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import login, logout
-from django.core.mail import EmailMessage
-from django.core.cache import cache
-
-from .forms import *
-from .models import *
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin,)
 
 
 # Create your views here.
@@ -62,7 +59,9 @@ class ApplicantDetailView(DetailView):
     def applicant_detail_view(request, primary_key):
         applicant = get_object_or_404(Applicant, pk=primary_key)
 
-        return render(request, 'main/applicant_detail.html', context={'applicant': applicant})
+        return render(request,
+                      'main/applicant_detail.html',
+                      context={'applicant': applicant})
 
 
 class TechnologyListView(ListView):
@@ -88,7 +87,9 @@ class VacancyDetailView(DetailView):
     def vacancy_detail_view(request, primary_key):
         vacancy = get_object_or_404(Vacancy, pk=primary_key)
 
-        return render(request, 'main/vacancy_detail.html', context={'vacancy': vacancy})
+        return render(request,
+                      'main/vacancy_detail.html',
+                      context={'vacancy': vacancy})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,8 +111,10 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     # success_url = 'account/profile/'
 
     def get_initial(self):
-        # этод метод я оставил только при создании так как связку User-Profile надо устанавливать
-        # только при создании профиля, при редактировании профиля она уже будет и заново устанавливать не надо
+        # этод метод я оставил только при создании
+        # так как связку User-Profile надо устанавливать
+        # только при создании профиля, при редактировании профиля
+        # она уже будет и заново устанавливать не надо
         initial = super(ProfileCreate, self).get_initial()
         initial['user'] = self.request.user.id
         return initial
@@ -158,8 +161,10 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):
-        """Метод обрабатывающий POST запрос.
-        Здесь происходит валидация основной формы и создание инстанса формы данным POST запроса
+        """
+        Метод обрабатывающий POST запрос.
+        Здесь происходит валидация основной формы и
+        создание инстанса формы данным POST запроса
         """
         self.object = self.get_object(request)
         form = self.get_form()
@@ -198,7 +203,9 @@ class RegisterUser(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        login(self.request,
+              user,
+              backend='django.contrib.auth.backends.ModelBackend')
         return redirect('index')
 
 

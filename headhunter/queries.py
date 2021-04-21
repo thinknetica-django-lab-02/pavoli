@@ -2,7 +2,8 @@ import os
 from datetime import datetime, timedelta
 
 import django
-from main.models import *
+from main.models import (Applicant, SummaryMain,
+                         Technology, Profile, Vacancy, SMSLog,)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'headhunter.settings')
 django.setup()
@@ -98,8 +99,9 @@ def get_profile_table():
 
 
 def fresh_vacancy():
-    d = datetime.now()
-    return [v.vacancy_name for v in Vacancy.objects.filter(publish_date__gte=d.date() - timedelta(days=7))]
+    d = datetime.now().date() - timedelta(days=7)
+    return [v.vacancy_name
+            for v in Vacancy.objects.filter(publish_date__gte=d)]
 
 
 def get_smslog():
@@ -139,14 +141,14 @@ def create_sms_task():
 
     server_responde = responseData["messages"][0]["status"]
 
-    a = SMSLog(phone_number=cell_phone, code=sms_code,
-               server_response=server_responde).save()
+    SMSLog(phone_number=cell_phone, code=sms_code,
+           server_response=server_responde).save()
 
     if server_responde == "0":
         print("Message sent successfully.")
     else:
-        print(
-            f"Message failed with error: {responseData['messages'][0]['error-text']}")
+        text = responseData['messages'][0]['error-text']
+        print(f"Message failed with error: {text}")
 
 
 if __name__ == '__main__':

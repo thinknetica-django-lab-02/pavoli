@@ -14,6 +14,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='applicant',
             name='image',
-            field=sorl.thumbnail.fields.ImageField(blank=True, null=True, upload_to='images'),
+            field=sorl.thumbnail.fields.ImageField(
+                blank=True,
+                 null=True,
+                upload_to='images'),
         ),
     ]

@@ -69,9 +69,11 @@ class Migration(migrations.Migration):
                 ('publish_date', models.DateField(auto_now=True)),
                 ('is_active', models.BooleanField(default=True)),
                 ('company_name', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE, to='main.employer')),
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='main.employer')),
                 ('key_skill', models.ManyToManyField(
-                    help_text='Select requiement(s) for vacancy', to='main.Technology')),
+                    help_text='Select requiement(s) for vacancy',
+                    to='main.Technology')),
             ],
         ),
         migrations.CreateModel(
@@ -139,7 +141,8 @@ class Migration(migrations.Migration):
                     default='00', max_length=2)),
                 ('job_duty', models.TextField(max_length=500)),
                 ('summary', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE, to='main.summarymain')),
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='main.summarymain')),
             ],
         ),
     ]

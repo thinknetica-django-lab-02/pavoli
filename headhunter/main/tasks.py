@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import logging
 import random
 
 from django.core.mail import EmailMultiAlternatives
@@ -7,8 +6,6 @@ from celery.utils.log import get_task_logger
 from celery import shared_task
 
 from .models import Vacancy, Subscriber, SMSLog
-from headhunter.celery import app
-
 
 logger = get_task_logger(__name__)
 
@@ -64,8 +61,8 @@ def create_sms_task():
 
     server_responde = responseData["messages"][0]["status"]
 
-    a = SMSLog(phone_number=cell_phone, code=sms_code,
-               server_response=server_responde).save()
+    SMSLog(phone_number=cell_phone, code=sms_code,
+           server_response=server_responde).save()
 
     if server_responde == "0":
         logger.info('Message sent successfully.')
