@@ -2,7 +2,7 @@ import pytest
 
 from django.urls import reverse
 
-from main.views import *
+from main.views import (Applicant, Vacancy, Employer,)
 
 
 @pytest.mark.django_db

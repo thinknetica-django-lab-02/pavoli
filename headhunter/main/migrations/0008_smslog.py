@@ -13,9 +13,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SMSLog',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True,
+                                        serialize=False,
+                                        verbose_name='ID')),
                 ('phone_number', models.CharField(max_length=15)),
-                ('code', models.CharField(blank=True, max_length=4, null=True)),
+                ('code', models.CharField(blank=True,
+                                          max_length=4,
+                                          null=True)),
                 ('server_response', models.TextField(max_length=200)),
             ],
         ),

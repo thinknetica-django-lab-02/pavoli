@@ -2,18 +2,19 @@ import os
 from datetime import datetime, timedelta
 
 import django
+from main.models import *
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'headhunter.settings')
 django.setup()
 
 
 def create_applicant():
-    a = Applicant(first_name='John', last_name='Doe',
-                  birth_date='1984-02-19', gender='m').save()
-    b = Applicant(first_name='Elizabeth', last_name='Herley',
-                  birth_date='1944-01-19', gender='f').save()
-    c = Applicant(first_name='Elza', last_name='Bretanny',
-                  birth_date='1974-11-25', gender='f').save()
+    Applicant(first_name='John', last_name='Doe',
+              birth_date='1984-02-19', gender='m').save()
+    Applicant(first_name='Elizabeth', last_name='Herley',
+              birth_date='1944-01-19', gender='f').save()
+    Applicant(first_name='Elza', last_name='Bretanny',
+              birth_date='1974-11-25', gender='f').save()
 
     print('Applicant created')
 
@@ -149,8 +150,6 @@ def create_sms_task():
 
 
 if __name__ == '__main__':
-    from main.models import *
-
     # create_applicant()
     # get_applicant_all()
     # create_summary_main()
