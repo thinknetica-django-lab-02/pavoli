@@ -1,6 +1,5 @@
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import AnonymousUser
 
 from main.views import *
 
@@ -23,8 +22,14 @@ class ApplicantDetailViewTests(TestCase):
     def setUp(self):
         self.client = Client()
 
+    def create_candidate(self):
+        Applicant(first_name='John', last_name='Doe',
+                  birth_date='1984-02-19', gender='m').save()
+        return Applicant.objects.get(last_name='Doe')
+
     def test_candidate_detail(self):
-        url = reverse('applicant-detail', args=[1, ])
+        a = self.create_candidate()
+        url = reverse('applicant-detail', kwargs={'pk': a.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -54,7 +59,14 @@ class VacancyDetailViewTests(TestCase):
     def setUp(self):
         self.client = Client()
 
+    def create_vacancy(self):
+        Employer(company_name='Apple').save()
+        e = Employer.objects.get(company_name='Apple')
+        Vacancy(company_name=e, vacancy_name='Python').save()
+        return Vacancy.objects.get(vacancy_name='Python').id
+
     def test_vacancy_detail(self):
-        url = reverse('vacancy-detail', kwargs={'pk': 1})
+        pk = self.create_vacancy()
+        url = reverse('vacancy-detail', kwargs={'pk': pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
