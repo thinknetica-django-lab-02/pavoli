@@ -1,19 +1,19 @@
-from .models import Applicant, Technology, Vacancy, Profile
-from .forms import (VacancyUpdateForm, ProfileForm,
-                    ProfileFormSet, UserForm, VacancyAddForm, CreateNewUser,)
-from django.core.cache import cache
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from django.contrib.auth import login
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import redirect, render, reverse, get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import (
-    ListView, DetailView, UpdateView, CreateView,
-)
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin,)
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
+from django.core.cache import cache
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView, DetailView, ListView, UpdateView,)
+
+from .forms import (CreateNewUser, ProfileForm, ProfileFormSet,
+                    UserForm, VacancyAddForm, VacancyUpdateForm,)
+from .models import Applicant, Profile, Technology, Vacancy
 
 
 # Create your views here.

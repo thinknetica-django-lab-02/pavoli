@@ -1,5 +1,5 @@
-from django.urls import path
 from django.contrib.flatpages import views as flat_views
+from django.urls import path
 from django.views.decorators.cache import cache_page
 
 from . import views

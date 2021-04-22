@@ -1,7 +1,7 @@
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
 
-from main.views import (Applicant, Vacancy, Employer)
+from main.views import (Applicant, Employer, Vacancy,)
 
 
 # client = Client()

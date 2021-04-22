@@ -1,11 +1,12 @@
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+
+from celery import shared_task
+from celery.utils.log import get_task_logger
 
 from django.core.mail import EmailMultiAlternatives
-from celery.utils.log import get_task_logger
-from celery import shared_task
 
-from .models import Vacancy, Subscriber, SMSLog
+from .models import SMSLog, Subscriber, Vacancy
 
 logger = get_task_logger(__name__)
 
