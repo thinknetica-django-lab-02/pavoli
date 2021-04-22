@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
-from allauth.account.forms import LoginForm
 from django.contrib.auth.forms import UserCreationForm
 
 from main.models import (
     Profile,
-    Vacancy, Employer,
+    Vacancy,
 )
 
 
@@ -50,9 +49,11 @@ class CreateNewUser(UserCreationForm):
     username = forms.CharField(
         label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password1 = forms.CharField(
-        label='Password1', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Password2', widget=forms.PasswordInput(
-        attrs={'class': 'form-input'}))
+        label='Password1', widget=forms.PasswordInput(
+            attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Password2',
+                                widget=forms.PasswordInput(
+                                    attrs={'class': 'form-input'}))
     email = forms.EmailField(
         label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
 

@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='applicant',
             name='skill',
-            field=models.ManyToManyField(help_text='Select a skill for Candidate', to='main.Technology'),
+            field=models.ManyToManyField(
+                help_text='Select a skill for Candidate',
+                 to='main.Technology'),
         ),
     ]

@@ -51,7 +51,8 @@ class Applicant(models.Model):
 
     def display_skill(self):
         """
-        Creates a string for the Skill. This is required to display genre in Admin.
+        Creates a string for the Skill.
+        This is required to display genre in Admin.
         """
         return ', '.join([skill.name for skill in self.skill.all()])
     display_skill.short_description = 'Skill'
@@ -113,7 +114,10 @@ class SummaryDetail(models.Model):
         return reverse('summary_detail', args=[str(self.id)])
 
     def __str__(self):
-        return '{0}, {1} ({2}.{3})'.format(self.company_name, self.job_title, self.year_begin, self.month_begin)
+        return '{0}, {1} ({2}.{3})'.format(self.company_name,
+                                           self.job_title,
+                                           self.year_begin,
+                                           self.month_begin)
 
 
 class Employer(models.Model):
@@ -153,7 +157,8 @@ class Vacancy(models.Model):
 
     def display_key_skill(self):
         """
-        Creates a string for the Skill. This is required to display genre in Admin.
+        Creates a string for the Skill.
+        This is required to display genre in Admin.
         """
         return ', '.join([skill.name for skill in self.key_skill.all()])
     display_key_skill.short_description = 'Skill'
@@ -188,6 +193,7 @@ def user_signed_up_(sender, request, user, **kwargs):
 
     subject, from_email, to = 'Welcome', 'admin@mysite', user.email
     text_content = "some custom text or html"
+    html_content = ''
     msg = EmailMultiAlternatives(
         subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
@@ -200,8 +206,10 @@ def send_mail(sender, instance, created, **kwargs):
         email_list = [s.user.email for s in Subscriber.objects.all()]
         subject = f'new vacancy created {instance.vacancy_name}'
         from_email = 'admin@mysite'
-        text_content = f'Vacancy {instance.vacancy_name}, from company {instance.company_name}'
-        html_content = f'For more details go to <a href="{instance.get_absolute_url()}">link</a>.'
+        text_content = 'Vacancy {0}, from company {1}'.format(
+            instance.vacancy_name, instance.company_name)
+        html_content = 'For more details go to <a href="{0}">link</a>.'.format(
+            instance.get_absolute_url())
         msg = EmailMultiAlternatives(
             subject, text_content, from_email, email_list)
         msg.attach_alternative(html_content, "text/html")
