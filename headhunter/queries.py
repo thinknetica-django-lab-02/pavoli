@@ -2,8 +2,9 @@ import os
 from datetime import datetime, timedelta
 
 import django
-from main.models import (Applicant, SummaryMain,
-                         Technology, Profile, Vacancy, SMSLog,)
+
+from main.models import (Applicant, Profile, SMSLog,
+                         SummaryMain, Technology, Vacancy)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'headhunter.settings')
 django.setup()

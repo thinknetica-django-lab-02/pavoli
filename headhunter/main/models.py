@@ -1,10 +1,11 @@
+from allauth.account.signals import user_signed_up
+
+from django.contrib.auth.models import Group, User
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models.signals import post_save
-from django.urls import reverse
-from django.contrib.auth.models import User, Group
 from django.dispatch import receiver
-from django.core.mail import EmailMultiAlternatives
-from allauth.account.signals import user_signed_up
+from django.urls import reverse
 
 from sorl.thumbnail import ImageField
 
@@ -27,6 +28,8 @@ class Technology(models.Model):
 
 
 class Applicant(models.Model):
+    """Model for Candidates whose can have 1 or more Summary.
+    """
 
     GENDER_CHOICE = (
         ('m', 'male'),
@@ -47,11 +50,16 @@ class Applicant(models.Model):
         return reverse('applicant-detail', args=[str(self.id)])
 
     def __str__(self):
+        """Print class in human-readeable format.
+        You can add/remove class-fields.
+
+        :return: str
+        :rtype: str
+        """
         return '{0} {1}'.format(self.first_name, self.last_name)
 
     def display_skill(self):
-        """
-        Creates a string for the Skill.
+        """Creates a string for the Skill.
         This is required to display genre in Admin.
         """
         return ', '.join([skill.name for skill in self.skill.all()])
@@ -59,6 +67,8 @@ class Applicant(models.Model):
 
 
 class SummaryMain(models.Model):
+    """Model for Summary. Consists the main information about candidate's experience.
+    """
 
     VISIBILITY_CHOICE = (
         ('v', 'Visible to anyone'),
@@ -82,6 +92,8 @@ class SummaryMain(models.Model):
 
 
 class SummaryDetail(models.Model):
+    """Model for Summary. Consists the detailed information about candidate's experience.
+    """
 
     MONTH_CHOICE = (
         ('00', ''),
@@ -121,6 +133,8 @@ class SummaryDetail(models.Model):
 
 
 class Employer(models.Model):
+    """Model for Employees. Consists the main information about company.
+    """
 
     company_name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
@@ -136,6 +150,8 @@ class Employer(models.Model):
 
 
 class Vacancy(models.Model):
+    """Model for Vacancy. Consists the main information about vacancy from Employer (Company).
+    """
 
     company_name = models.ForeignKey(Employer, on_delete=models.CASCADE)
     vacancy_name = models.CharField(max_length=50)
@@ -156,8 +172,7 @@ class Vacancy(models.Model):
         return f'{self.vacancy_name} ({self.salary_min} - {self.salary_max})'
 
     def display_key_skill(self):
-        """
-        Creates a string for the Skill.
+        """Creates a string for the Skill.
         This is required to display genre in Admin.
         """
         return ', '.join([skill.name for skill in self.key_skill.all()])
@@ -165,6 +180,8 @@ class Vacancy(models.Model):
 
 
 class Profile(models.Model):
+    """Model for user profile. Has connection with User-model.
+    """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -174,6 +191,8 @@ class Profile(models.Model):
 
 
 class Subscriber(models.Model):
+    """Model for Subscriber. Class contains users for sending emails with news.
+    """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -183,6 +202,8 @@ class Subscriber(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    """If user profile created, it is auto-add into `common_users` group.
+    """
     if created:
         group = Group.objects.get_or_create(name='common_users')
         instance.groups.add(group[0])
@@ -190,7 +211,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(user_signed_up)
 def user_signed_up_(sender, request, user, **kwargs):
-
+    """Sending `Welcome email` after user sing-up into system.
+    """
     subject, from_email, to = 'Welcome', 'admin@mysite', user.email
     text_content = "some custom text or html"
     html_content = ''
@@ -202,6 +224,8 @@ def user_signed_up_(sender, request, user, **kwargs):
 
 @receiver(post_save, sender=Vacancy)
 def send_mail(sender, instance, created, **kwargs):
+    """Sending for all Subscribers `fresh` vacancy list.
+    """
     if created:
         email_list = [s.user.email for s in Subscriber.objects.all()]
         subject = f'new vacancy created {instance.vacancy_name}'
@@ -217,6 +241,8 @@ def send_mail(sender, instance, created, **kwargs):
 
 
 class SMSLog(models.Model):
+    """Store sended sms-codes.
+    """
 
     phone_number = models.CharField(max_length=15)
     code = models.CharField(max_length=4, null=True, blank=True)
