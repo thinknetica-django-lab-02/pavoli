@@ -35,7 +35,7 @@ class ApplicantListView(ListView):
     context_object_name = 'applicant_list'
     queryset = Applicant.objects.all()
 
-    def get_context_data(self, **kwargs: dict) -> dict:
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         tag = self.request.GET.get('tag')
         context['tag'] = tag
@@ -58,7 +58,7 @@ class ApplicantDetailView(DetailView):
     model = Applicant
     paginate_by = 10
 
-    def applicant_detail_view(request: HttpRequest, primary_key: int) -> HttpResponse:
+    def applicant_detail_view(request, primary_key):
         applicant = get_object_or_404(Applicant, pk=primary_key)
 
         return render(request,
@@ -86,14 +86,14 @@ class VacancyDetailView(DetailView):
     model = Vacancy
     paginate_by = 10
 
-    def vacancy_detail_view(request: HttpRequest, primary_key: int) -> HttpResponse:
+    def vacancy_detail_view(request, primary_key):
         vacancy = get_object_or_404(Vacancy, pk=primary_key)
 
         return render(request,
                       'main/vacancy_detail.html',
                       context={'vacancy': vacancy})
 
-    def get_context_data(self, **kwargs: dict) -> dict:
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
 
         pk = context['vacancy']
@@ -130,22 +130,22 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'account/profile/profile_form.html'
     login_url = reverse_lazy('index')
 
-    def get_success_url(self) -> HttpResponse:
+    def get_success_url(self) -> str:
         pk = self.kwargs['pk']
         return reverse('profile', kwargs={'pk': pk})
 
-    def get_object(self, request: HttpRequest) -> 'QuerySet[User]':
+    def get_object(self, request):
         """Получение пользователя из request."""
         return request.user
 
-    def get_context_data(self, **kwargs: dict) -> dict:
+    def get_context_data(self, **kwargs) -> dict:
         """Добавление в контекст дополнительной формы"""
         context = super().get_context_data(**kwargs)
         context['profile_form'] = ProfileFormSet(
             instance=self.get_object(kwargs['request']))
         return context
 
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """Метод обрабатывающий GET запрос.
         Переопределяется только из-за self.get_object(request)
         """
@@ -162,7 +162,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         form.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         """
         Метод обрабатывающий POST запрос.
         Здесь происходит валидация основной формы и
