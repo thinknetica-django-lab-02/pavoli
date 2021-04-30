@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.core.cache import cache
+from django.db.models.query import QuerySet
+from django.http import HttpRequest, HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.urls import reverse_lazy
@@ -19,7 +21,7 @@ from .models import Applicant, Profile, Technology, Vacancy
 # Create your views here.
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     context = {
         'turn_on_block': True,
     }
@@ -33,7 +35,7 @@ class ApplicantListView(ListView):
     context_object_name = 'applicant_list'
     queryset = Applicant.objects.all()
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         tag = self.request.GET.get('tag')
         context['tag'] = tag
@@ -43,7 +45,7 @@ class ApplicantListView(ListView):
             context['tag_url'] = ''
         return context
 
-    def get_queryset(self):
+    def get_queryset(self) -> 'QuerySet[Applicant]':
         queryset = super().get_queryset()
         tag = self.request.GET.get('tag')
 
@@ -91,7 +93,7 @@ class VacancyDetailView(DetailView):
                       'main/vacancy_detail.html',
                       context={'vacancy': vacancy})
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
 
         pk = context['vacancy']
@@ -110,7 +112,7 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     form_class = ProfileForm
     # success_url = 'account/profile/'
 
-    def get_initial(self):
+    def get_initial(self) -> dict:
         # этод метод я оставил только при создании
         # так как связку User-Profile надо устанавливать
         # только при создании профиля, при редактировании профиля
@@ -128,7 +130,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'account/profile/profile_form.html'
     login_url = reverse_lazy('index')
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         pk = self.kwargs['pk']
         return reverse('profile', kwargs={'pk': pk})
 
@@ -136,21 +138,21 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         """Получение пользователя из request."""
         return request.user
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         """Добавление в контекст дополнительной формы"""
         context = super().get_context_data(**kwargs)
         context['profile_form'] = ProfileFormSet(
             instance=self.get_object(kwargs['request']))
         return context
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         """Метод обрабатывающий GET запрос.
         Переопределяется только из-за self.get_object(request)
         """
         self.object = self.get_object(request)
         return self.render_to_response(self.get_context_data(request=request))
 
-    def form_valid_formset(self, form, formset):
+    def form_valid_formset(self, form, formset) -> HttpResponse:
         """Валидация вложенной формы и сохранение обеих форм."""
         if formset.is_valid():
             formset.save(commit=False)
@@ -160,7 +162,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         form.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         """
         Метод обрабатывающий POST запрос.
         Здесь происходит валидация основной формы и
@@ -178,7 +180,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
 
 class VacancyAddView(PermissionRequiredMixin, CreateView):
 
-    def has_permission(self):
+    def has_permission(self) -> bool:
         return self.request.user.groups.filter(name='sellers').exists()
 
     model = Vacancy
@@ -188,7 +190,7 @@ class VacancyAddView(PermissionRequiredMixin, CreateView):
 
 class VacancyUpdateView(PermissionRequiredMixin, UpdateView):
 
-    def has_permission(self):
+    def has_permission(self) -> bool:
         return self.request.user.groups.filter(name='sellers').exists()
 
     model = Vacancy
@@ -201,7 +203,7 @@ class RegisterUser(CreateView):
     form_class = CreateNewUser
     template_name = 'main/register.html'
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponse:
         user = form.save()
         login(self.request,
               user,

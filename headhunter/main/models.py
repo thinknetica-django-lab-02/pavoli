@@ -1,12 +1,10 @@
 from allauth.account.signals import user_signed_up
-
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-
 from sorl.thumbnail import ImageField
 
 
@@ -46,7 +44,7 @@ class Applicant(models.Model):
         Technology, help_text="Select a skill for Candidate")
     image = ImageField(upload_to='images', blank=True, null=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('applicant-detail', args=[str(self.id)])
 
     def __str__(self):
@@ -58,7 +56,7 @@ class Applicant(models.Model):
         """
         return '{0} {1}'.format(self.first_name, self.last_name)
 
-    def display_skill(self):
+    def display_skill(self) -> str:
         """Creates a string for the Skill.
         This is required to display genre in Admin.
         """
@@ -84,7 +82,7 @@ class SummaryMain(models.Model):
         max_length=1, choices=VISIBILITY_CHOICE, default='v')
     refresh_date = models.DateTimeField(auto_now=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('summary_main', args=[str(self.id)])
 
     def __str__(self):
@@ -122,7 +120,7 @@ class SummaryDetail(models.Model):
         max_length=2, choices=MONTH_CHOICE, default='00')
     job_duty = models.TextField(max_length=500)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('summary_detail', args=[str(self.id)])
 
     def __str__(self):
@@ -142,7 +140,7 @@ class Employer(models.Model):
     address = models.CharField(max_length=100)
     update_date = models.DateTimeField(auto_now=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('employer', args=[str(self.id)])
 
     def __str__(self):
@@ -165,13 +163,13 @@ class Vacancy(models.Model):
     publish_date = models.DateField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('vacancy-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.vacancy_name} ({self.salary_min} - {self.salary_max})'
 
-    def display_key_skill(self):
+    def display_key_skill(self) -> str:
         """Creates a string for the Skill.
         This is required to display genre in Admin.
         """
@@ -196,12 +194,12 @@ class Subscriber(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.user.username}({self.user.email})'
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
     """If user profile created, it is auto-add into `common_users` group.
     """
     if created:
@@ -210,7 +208,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 @receiver(user_signed_up)
-def user_signed_up_(sender, request, user, **kwargs):
+def user_signed_up_(sender, request, user, **kwargs) -> None:
     """Sending `Welcome email` after user sing-up into system.
     """
     subject, from_email, to = 'Welcome', 'admin@mysite', user.email
@@ -223,7 +221,7 @@ def user_signed_up_(sender, request, user, **kwargs):
 
 
 @receiver(post_save, sender=Vacancy)
-def send_mail(sender, instance, created, **kwargs):
+def send_mail(sender, instance, created: bool, **kwargs) -> None:
     """Sending for all Subscribers `fresh` vacancy list.
     """
     if created:
