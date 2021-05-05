@@ -1,5 +1,6 @@
 from allauth.account.signals import user_signed_up
 from django.contrib.auth.models import Group, User
+from django.contrib.postgres.fields import ArrayField
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models.signals import post_save
@@ -34,14 +35,17 @@ class Applicant(models.Model):
         ('f', 'female'),
     )
 
+    def skill_default():
+        return list('Oracle')
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     birth_date = models.DateField(null=True, blank=True)
     email = models.EmailField(max_length=50)
     phone = models.CharField(max_length=20)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICE, blank=True)
-    skill = models.ManyToManyField(
-        Technology, help_text="Select a skill for Candidate")
+    # skill = models.ManyToManyField(Technology, help_text="Select a skill for Candidate")
+    skill = ArrayField(models.CharField(max_length=200, blank=True, null=True), default=list)
     image = ImageField(upload_to='images', blank=True, null=True)
 
     def get_absolute_url(self) -> str:
@@ -198,7 +202,7 @@ class Subscriber(models.Model):
         return f'{self.user.username}({self.user.email})'
 
 
-@receiver(post_save, sender=User)
+@ receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
     """If user profile created, it is auto-add into `common_users` group.
     """
@@ -207,7 +211,7 @@ def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
         instance.groups.add(group[0])
 
 
-@receiver(user_signed_up)
+@ receiver(user_signed_up)
 def user_signed_up_(sender, request, user, **kwargs) -> None:
     """Sending `Welcome email` after user sing-up into system.
     """
@@ -220,7 +224,7 @@ def user_signed_up_(sender, request, user, **kwargs) -> None:
     msg.send()
 
 
-@receiver(post_save, sender=Vacancy)
+@ receiver(post_save, sender=Vacancy)
 def send_mail(sender, instance, created: bool, **kwargs) -> None:
     """Sending for all Subscribers `fresh` vacancy list.
     """
