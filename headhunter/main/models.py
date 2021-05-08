@@ -202,7 +202,7 @@ class Subscriber(models.Model):
         return f'{self.user.username}({self.user.email})'
 
 
-@ receiver(post_save, sender=User)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
     """If user profile created, it is auto-add into `common_users` group.
     """
@@ -211,7 +211,7 @@ def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
         instance.groups.add(group[0])
 
 
-@ receiver(user_signed_up)
+@receiver(user_signed_up)
 def user_signed_up_(sender, request, user, **kwargs) -> None:
     """Sending `Welcome email` after user sing-up into system.
     """
@@ -224,7 +224,7 @@ def user_signed_up_(sender, request, user, **kwargs) -> None:
     msg.send()
 
 
-@ receiver(post_save, sender=Vacancy)
+@receiver(post_save, sender=Vacancy)
 def send_mail(sender, instance, created: bool, **kwargs) -> None:
     """Sending for all Subscribers `fresh` vacancy list.
     """
