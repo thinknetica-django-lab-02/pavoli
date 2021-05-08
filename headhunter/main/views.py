@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin,)
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.cache import cache
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
@@ -79,7 +80,18 @@ class VacancyListView(ListView):
     paginate_by = 10
 
     context_object_name = 'vacancy_list'
-    queryset = Vacancy.objects.all()
+    # queryset = Vacancy.objects.all()
+    # queryset = Vacancy.objects.filter(vacancy_name__search='Senior')
+    # queryset = Vacancy.objects.annotate(search=SearchVector('vacancy_name'),).filter(search='Developer')
+
+    '''
+    vector = SearchVector('vacancy_name')
+    query = SearchQuery('Engineer')
+    queryset = Vacancy.objects.annotate(rank=SearchRank(vector, query)).order_by('-salary_max')
+    '''
+
+    searchquery = SearchQuery('snowflake') | SearchQuery('developer') & SearchQuery('engineer')
+    queryset = Vacancy.objects.annotate(search=SearchVector('vacancy_name'),).filter(search=searchquery)
 
 
 class VacancyDetailView(DetailView):

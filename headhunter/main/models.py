@@ -202,7 +202,7 @@ class Subscriber(models.Model):
         return f'{self.user.username}({self.user.email})'
 
 
-@ receiver(post_save, sender=User)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
     """If user profile created, it is auto-add into `common_users` group.
     """
@@ -211,7 +211,7 @@ def create_user_profile(sender, instance, created: bool, **kwargs) -> None:
         instance.groups.add(group[0])
 
 
-@ receiver(user_signed_up)
+@receiver(user_signed_up)
 def user_signed_up_(sender, request, user, **kwargs) -> None:
     """Sending `Welcome email` after user sing-up into system.
     """
@@ -224,7 +224,7 @@ def user_signed_up_(sender, request, user, **kwargs) -> None:
     msg.send()
 
 
-@ receiver(post_save, sender=Vacancy)
+@receiver(post_save, sender=Vacancy)
 def send_mail(sender, instance, created: bool, **kwargs) -> None:
     """Sending for all Subscribers `fresh` vacancy list.
     """
@@ -249,3 +249,23 @@ class SMSLog(models.Model):
     phone_number = models.CharField(max_length=15)
     code = models.CharField(max_length=4, null=True, blank=True)
     server_response = models.TextField(max_length=200)
+
+
+class VacancyView(models.Model):
+    """ View for Vacancy, with full information about it.
+    """
+
+    company_name = models.CharField(max_length=50)
+    site = models.CharField(max_length=100)
+    vacancy_name = models.CharField(max_length=50)
+    vacancy_description = models.TextField(max_length=200)
+    salary_min = models.IntegerField(blank=True, null=True)
+    salary_max = models.IntegerField(blank=True, null=True)
+    currency = models.CharField(
+        max_length=1, choices=CURRENCY_CHOICE, default='r')
+    publish_date = models.DateField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vacancy_employer_view'
